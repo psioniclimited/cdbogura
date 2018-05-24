@@ -1,0 +1,51 @@
+<?php
+
+namespace App\Modules\CableManagement\Repository;
+use Illuminate\Http\Request;
+use App\Modules\CableManagement\Models\Customer;
+use App\Modules\CableManagement\Models\CustomerDetails;
+use Entrust;
+use Carbon\Carbon;
+use Auth;
+use Illuminate\Support\Facades\DB;
+
+class PartnerRepository
+{
+    public function getTotalBillCollection(Request $request) {
+        $collection_sum = CustomerDetails::where('due', 0);
+
+        if($request->input('daterange') != null) {
+            $explode_date = explode("-", $request->input('daterange'));
+            $start_date = str_replace(' ', '', $explode_date[0]);
+            $end_date = str_replace(' ', '', $explode_date[1]);
+            $begin_time = Carbon::createFromFormat('d/m/Y', $start_date)->setTime(0, 0, 0);
+            $finish_time = Carbon::createFromFormat('d/m/Y', $end_date)->setTime(23, 59, 59);
+
+            $collection_sum->whereBetween('timestamp', [$begin_time, $finish_time]);
+        }
+
+        $total_bill_amount = $collection_sum->sum('total') - $collection_sum->sum('discount');
+        return $total_bill_amount;
+    }
+
+    public function getTotalExpense(Request $request) {
+        $postings = DB::table('postings')
+            ->join('journals', 'journals.id', '=', 'postings.journals_id')
+            ->join('chart_of_accounts', 'chart_of_accounts.id', '=', 'postings.chart_of_accounts_id')
+            ->where('chart_of_accounts.parent_accounts_id', 4);
+        if($request->input('daterange') != null) {
+            $explode_date = explode("-", $request->input('daterange'));
+            $start_date = str_replace(' ', '', $explode_date[0]);
+            $end_date = str_replace(' ', '', $explode_date[1]);
+            $begin_time = Carbon::createFromFormat('d/m/Y', $start_date)->toDateString();
+            $finish_time = Carbon::createFromFormat('d/m/Y', $end_date)->toDateString();
+            $postings->whereBetween('postings.transaction_date', [$begin_time, $finish_time]);
+        }
+        $postings = $postings->select([
+            'postings.debit'
+        ]);
+
+        $total_expense = (double)$postings->sum('postings.debit');
+        return $total_expense;
+    }
+}
