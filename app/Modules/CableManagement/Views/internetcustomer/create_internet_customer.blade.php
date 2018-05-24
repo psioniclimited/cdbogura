@@ -424,11 +424,11 @@ $(document).ready(function() {
 		</div>
 		<!-- /.box-header -->
 		{{-- Form starts here --}}
-		{!! Form::open(array('url' => 'create_internet_customer_process', 'id' => 'add_internet_customer_form', 'class' => 'form-horizontal')) !!}
+		{!! Form::open(array('url' => 'create_internet_customer_process', 'id' => 'add_internet_customer_form', 'class' => 'form-horizontal', 'enctype' => 'multipart/form-data')) !!}
 		<div class="box-body">
 			<div class="col-md-4">
 				<div class="form-group @if ($errors->has('name')) has-error @endif">
-	                <label>Customer Username*</label>
+	                <label>Name*</label>
 	                <input type="text" class="form-control" name="name" id="name" placeholder="Enter username" tabindex=1 value="{{old('name')}}">
 					@if ($errors->has('name')) <p class="help-block">{{ $errors->first('name') }}</p> @endif
 	            </div>
@@ -467,6 +467,10 @@ $(document).ready(function() {
 				<div class="form-group">
 					<label>PPoE Username/IP*</label>
 					<input type="text" class="form-control" name="ppoeorip" id="ppoeorip" placeholder="Enter PPoE Username/IP*" tabindex=7>
+				</div>
+				<div class="form-group">
+					<label>Customer Password*</label>
+					<input type="text" class="form-control" name="customer_password" id="customer_password" placeholder="Enter customer password*" tabindex=7>
 				</div>
 			</div>
 			<!-- /.col -->
@@ -543,6 +547,10 @@ $(document).ready(function() {
 	                  </div>
 	                  <input type="text" class="form-control pull-right" id="connection_start_date" name="connection_start_date" tabindex=14>
 	                </div>
+				</div>
+				<div class="form-group">
+					<label for="pic" >Upload NID Photo</label>
+					<input type="file" name="pic" id="pic">
 				</div>
 			</div>
 			<!-- /.col -->

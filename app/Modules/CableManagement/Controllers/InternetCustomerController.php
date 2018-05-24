@@ -15,11 +15,13 @@ use App\Modules\CableManagement\Models\Sector;
 use App\Modules\CableManagement\Models\Road;
 use App\Modules\CableManagement\Models\House;
 use App\Modules\User\Models\RoleUser;
-use Entrust;
 use App\Modules\CableManagement\Models\CustomerStatus;
 use App\Modules\CableManagement\Models\SubscriptionDetail;
 use App\Modules\CableManagement\Datatables\UsersDatatable;
 use App\Modules\CableManagement\Datatables\InternetCustomersDatatable;
+use Carbon\Carbon;
+use Entrust;
+use File;
 
 class InternetCustomerController extends Controller {
 
@@ -73,6 +75,15 @@ class InternetCustomerController extends Controller {
                             ",H#" . $internet_customer->house->house . 
                             "F#" . $internet_customer->flat . ',' .
                             $internet_customer->house->road->sector->territory->name;
+
+        /* Saving the NID Picture to File and Url to 'customers' table */
+        if ($request->file("pic") !== null) {
+            $filename = Carbon::now();
+            $filename = $filename->timestamp;
+            $request->file('pic')->move(storage_path('app/nid_images'), $filename);
+            $internet_customer->nid_image = 'app/nid_images/' . $filename;
+        }
+
         $internet_customer->save();
 
         return redirect('internetcustomers');
@@ -141,6 +152,19 @@ class InternetCustomerController extends Controller {
                             ",H#" . $edit_internet_customer->house->house . 
                             "F#" . $edit_internet_customer->flat . ',' .
                             $edit_internet_customer->house->road->sector->territory->name;
+
+        /* Updating the NID Picture to File and Url to 'customers' table */
+        if ($request->file("pic") !== null) {
+            $del_prev_file = storage_path($edit_internet_customer->nid_image);
+            if (File::exists($del_prev_file)) {
+                File::delete($del_prev_file);
+            }
+            $filename = Carbon::now();
+            $filename = $filename->timestamp;
+            $request->file('pic')->move(storage_path('app/nid_images'), $filename);
+            $edit_internet_customer->nid_image = 'app/nid_images/' . $filename;
+        }
+
         $edit_internet_customer->save();
 
         return redirect('internetcustomers/'.$id.'/edit');

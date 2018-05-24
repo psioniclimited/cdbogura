@@ -5,23 +5,23 @@
             <i class="fa fa-dashboard"></i> <span>Dashboard</span>            
         </a>        
     </li>
-    <li class="disabled-li" {!! Request::is('customers') || Request::is('create_customer') ? ' class="treeview active"' : ' class="treeview"' !!}>
-        <a href="#">
-            <i class="fa fa-files-o"></i>
-            <span>Dish Customers</span>
-            <span class="pull-right-container">
-                <i class="fa fa-lock pull-right"></i>
-            </span>
-        </a>
-        <ul class="treeview-menu">
-            @if(Entrust::can('customers.read'))
-                <li {!! Request::is('customers') ? ' class="active"' : null !!}><a href="{{url('customers')}}"><i class="fa fa-circle-o"></i> All Dish Customers</a></li>
-            @endif
-            @if(Entrust::can('customers.create'))
-                <li {!! Request::is('create_customer') ? ' class="active"' : null !!}><a href="{{url('create_customer')}}"><i class="fa fa-circle-o"></i> New Dish Customer</a></li>
-            @endif            
-        </ul>
-    </li>
+    {{--<li class="disabled-li" {!! Request::is('customers') || Request::is('create_customer') ? ' class="treeview active"' : ' class="treeview"' !!}>--}}
+        {{--<a href="#">--}}
+            {{--<i class="fa fa-files-o"></i>--}}
+            {{--<span>Dish Customers</span>--}}
+            {{--<span class="pull-right-container">--}}
+                {{--<i class="fa fa-lock pull-right"></i>--}}
+            {{--</span>--}}
+        {{--</a>--}}
+        {{--<ul class="treeview-menu">--}}
+            {{--@if(Entrust::can('customers.read'))--}}
+                {{--<li {!! Request::is('customers') ? ' class="active"' : null !!}><a href="{{url('customers')}}"><i class="fa fa-circle-o"></i> All Dish Customers</a></li>--}}
+            {{--@endif--}}
+            {{--@if(Entrust::can('customers.create'))--}}
+                {{--<li {!! Request::is('create_customer') ? ' class="active"' : null !!}><a href="{{url('create_customer')}}"><i class="fa fa-circle-o"></i> New Dish Customer</a></li>--}}
+            {{--@endif            --}}
+        {{--</ul>--}}
+    {{--</li>--}}
     <li {!! Request::is('internetcustomers') || Request::is('create_internet_customer') ? ' class="treeview active"' : ' class="treeview"' !!}>
         <a href="#">
             <i class="fa fa-files-o"></i>
@@ -48,9 +48,9 @@
             </span>
         </a>
         <ul class="treeview-menu">
-            @if(Entrust::can('duelist.read'))
-                <li class="disabled-li" {!! Request::is('duelist') ? ' class="active"' : null !!}><a href="{{url('duelist')}}"><i class="fa fa-lock"></i> Dish Customer Due List</a></li>
-            @endif
+            {{--@if(Entrust::can('duelist.read'))--}}
+                {{--<li class="disabled-li" {!! Request::is('duelist') ? ' class="active"' : null !!}><a href="{{url('duelist')}}"><i class="fa fa-lock"></i> Dish Customer Due List</a></li>--}}
+            {{--@endif--}}
             @if(Entrust::can('internetcustomerduelist.read'))
                 <li {!! Request::is('internetcustomersduelist') ? ' class="active"' : null !!}><a href="{{url('internetcustomersduelist')}}"><i class="fa fa-circle-o"></i> Internet Customer Due List</a></li>
             @endif
@@ -70,7 +70,7 @@
             @endif
         </ul>
     </li>
-    <li {!! Request::is('create_expense') || Request::is('edit_expense') || Request::is('expense_list') || Request::is('chart_of_accounts') ? ' class="treeview active"' : ' class="treeview"' !!}>
+    <li {!! Request::is('create_expense') || Request::is('edit_expense') || Request::is('expense_list') || Request::is('chart_of_accounts_expense') ? ' class="treeview active"' : ' class="treeview"' !!}>
         <a href="#">
             <i class="fa fa-files-o"></i>
             <span>Expenses</span>
@@ -81,7 +81,19 @@
         <ul class="treeview-menu">
             <li {!! Request::is('create_expense') ? ' class="active"' : null !!}><a href="{{url('create_expense')}}"><i class="fa fa-circle-o"></i> New Expense</a></li>
             <li {!! Request::is('expense_list') ? ' class="active"' : null !!}><a href="{{url('expense_list')}}"><i class="fa fa-circle-o"></i> Expense List</a></li>
-            <li {!! Request::is('chart_of_accounts') ? ' class="active"' : null !!}><a href="{{url('chart_of_accounts')}}"><i class="fa fa-circle-o"></i> Expense Category</a></li>
+            <li {!! Request::is('chart_of_accounts_expense') ? ' class="active"' : null !!}><a href="{{url('chart_of_accounts_expense')}}"><i class="fa fa-circle-o"></i> Expense Category</a></li>
+        </ul>
+    </li>
+    <li {!! Request::is('create_chart_of_account') ? ' class="treeview active"' : ' class="treeview"' !!}>
+        <a href="#">
+            <i class="fa fa-files-o"></i>
+            <span>Chart of Accounts</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li {!! Request::is('create_chart_of_account') ? ' class="active"' : null !!}><a href="{{url('create_chart_of_account')}}"><i class="fa fa-circle-o"></i> New Chart Of Account</a></li>
         </ul>
     </li>
     <li {!! Request::is('create_complain') || Request::is('complain_list') || Request::is('*edit_complain/*') ? ' class="treeview active"' : ' class="treeview"' !!}>
@@ -106,18 +118,12 @@
             </span>
         </a>
         <ul class="treeview-menu">
-            {{-- @if(Entrust::can('billpendinglist.read')) 
-                <li {!! Request::is('billpendinglist') ? ' class="active"' : null !!}><a href="{{url('billpendinglist')}}"><i class="fa fa-circle-o"></i>Bill Pending</a></li>
-            @endif --}}
-            @if(Entrust::can('billcollectionlist.read'))
-                <li class="disabled-li" {!! Request::is('billcollectionlist') ? ' class="active"' : null !!}><a href="{{url('billcollectionlist')}}"><i class="fa fa-lock"></i>Dish Bill Collection</a></li>
-            @endif
-            @if(Entrust::can('refund.access'))
-                <li class="disabled-li" {!! Request::is('refundhistory') ? ' class="active"' : null !!}><a href="{{url('refundhistory')}}"><i class="fa fa-lock"></i>Dish Refund History</a></li>
-            @endif
-            {{-- @if(Entrust::can('internetbillpendinglist.read'))
-                <li {!! Request::is('internetbillpendinglist') ? ' class="active"' : null !!}><a href="{{url('internetbillpendinglist')}}"><i class="fa fa-circle-o"></i>Internet Bill Pending</a></li>
-            @endif --}}
+            {{--@if(Entrust::can('billcollectionlist.read'))--}}
+                {{--<li class="disabled-li" {!! Request::is('billcollectionlist') ? ' class="active"' : null !!}><a href="{{url('billcollectionlist')}}"><i class="fa fa-lock"></i>Dish Bill Collection</a></li>--}}
+            {{--@endif--}}
+            {{--@if(Entrust::can('refund.access'))--}}
+                {{--<li class="disabled-li" {!! Request::is('refundhistory') ? ' class="active"' : null !!}><a href="{{url('refundhistory')}}"><i class="fa fa-lock"></i>Dish Refund History</a></li>--}}
+            {{--@endif--}}
             @if(Entrust::can('internetbillcollectionlist.read'))
                 <li {!! Request::is('internetbillcollectionlist') ? ' class="active"' : null !!}><a href="{{url('internetbillcollectionlist')}}"><i class="fa fa-circle-o"></i>Internet Bill Collection</a></li>
             @endif

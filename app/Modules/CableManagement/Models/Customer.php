@@ -15,7 +15,7 @@ class Customer extends Model
     protected $table = 'customers';
 	protected $primaryKey = 'customers_id';
 
-    protected $fillable = ['customer_code', 'name', 'phone', 'territory_id', 'sectors_id', 'roads_id', 'houses_id', 'flat', 'monthly_bill', 'number_of_connections', 'connection_start_date', 'subscription_types_id', 'subscription_details_id', 'customer_status_id', 'last_paid', 'ppoeorip'];
+    protected $fillable = ['customer_code', 'name', 'phone', 'customer_password','territory_id', 'sectors_id', 'roads_id', 'houses_id', 'flat', 'monthly_bill', 'number_of_connections', 'connection_start_date', 'subscription_types_id', 'subscription_details_id', 'customer_status_id', 'last_paid', 'ppoeorip', 'nid_image'];
 
     protected $dates = ['deleted_at'];
 

@@ -197,7 +197,7 @@
                                 <span class="info-box-icon"><i class="ion ion-cash"></i></span>
                                 <div class="info-box-content">
                                     <span class="info-box-text">Total Expense</span>
-                                    <span class="info-box-number banner-font" id="expense_sum"></span>
+                                    <span class="info-box-number" id="expense_sum"></span>
                                 </div>
                             </div>
                         </div>

@@ -492,12 +492,12 @@ $(document).ready(function () {
         <!-- /.box-header -->
         <!-- form starts here -->
         
-        {!! Form::open(array('url' => array('edit_internet_customer_process', $customer->customers_id), 'id' => 'edit_internet_customer_form', 'class' => 'form-horizontal', 'method'=>'PUT')) !!}
+        {!! Form::open(array('url' => array('edit_internet_customer_process', $customer->customers_id), 'id' => 'edit_internet_customer_form', 'class' => 'form-horizontal', 'method'=>'PUT', 'enctype' => 'multipart/form-data')) !!}
 
         <div class="box-body">
             <div class="col-md-4">
                 <div class="form-group @if ($errors->has('name')) has-error @endif">
-                    <label>Customer Username*</label>
+                    <label>Name*</label>
                     <input type="text" class="form-control" name="name" id="name" placeholder="Enter username" value="{{$customer->name}}" tabindex=1>
                     @if ($errors->has('name')) <p class="help-block">{{ $errors->first('name') }}</p> @endif
                 </div>
@@ -536,6 +536,10 @@ $(document).ready(function () {
                 <div class="form-group">
                     <label>PPoE Username/IP*</label>
                     <input type="text" class="form-control" name="ppoeorip" id="ppoeorip" value="{{$customer->ppoeorip}}" tabindex=7>
+                </div>
+                <div class="form-group">
+                    <label>Customer Password*</label>
+                    <input type="text" class="form-control" name="customer_password" id="customer_password" placeholder="Enter customer password*" tabindex=7 value="{{$customer->customer_password}}">
                 </div>
             </div>
             <!-- /.col -->
@@ -612,6 +616,10 @@ $(document).ready(function () {
                       </div>
                       <input type="text" class="form-control pull-right" id="connection_start_date" name="connection_start_date" value="{{$connection_start_date}}" tabindex=14>
                     </div>
+                </div>
+                <div class="form-group">
+                    <label for="pic" >Upload NID Photo</label>
+                    <input type="file" name="pic" id="pic">
                 </div>
             </div>
             <input type="hidden" id="customer_id" name="customer_id" value="{{$customer->customers_id}}">

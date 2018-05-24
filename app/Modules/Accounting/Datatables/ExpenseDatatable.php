@@ -32,6 +32,7 @@ class ExpenseDatatable extends DataTable
             ->addColumn('action', function ($posting) {
                 return '<a href="' . url('/edit_expense') . '/' . $posting->id . '" class="btn btn-xs btn-primary" target="_blank">
                         <i class="glyphicon glyphicon-edit"></i> Edit</a>';
+
             })
             ->make(true);
     }
@@ -46,7 +47,7 @@ class ExpenseDatatable extends DataTable
         $postings = DB::table('postings')
             ->join('journals', 'journals.id', '=', 'postings.journals_id')
             ->join('chart_of_accounts', 'chart_of_accounts.id', '=', 'postings.chart_of_accounts_id')
-            ->where('chart_of_accounts.parent_accounts_id', 4);
+            ->where('chart_of_accounts.parent_accounts_id', 4); // Parent accounts id = 4
 
 
         if($this->expense_category != null) {

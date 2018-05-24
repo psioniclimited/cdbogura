@@ -23,6 +23,7 @@ class ExpensesController extends Controller {
     }
 
     public function createExpenseProcess(ExpenseRequest $request) {
+//        return $request->all();
         $journal = Journal::create($request->only([
     	    'transaction_date',
             'note',
@@ -89,9 +90,8 @@ class ExpensesController extends Controller {
         return response()->json($postings->sum('postings.debit'));
     }
 
-    public function chartOfAccounts() {
-
-        return view('Accounting::coa.create_chart_of_accounts_expense');
+    public function chartOfAccountsExpense() {
+        return view('Accounting::expense.create_chart_of_accounts_expense');
     }
 
     public function chartOfAccountsList() {

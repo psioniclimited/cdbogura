@@ -54,7 +54,7 @@ $(document).ready(function () {
         $.ajax({
             cache: false,
             type: 'POST',
-            url: '/chart_of_accounts_add_expense/',
+            url: "{{ URL::to('/chart_of_accounts_add_expense') }}",
             data: form_data,
             success: function (data) {
                 console.log("Added Successfully");
@@ -81,10 +81,11 @@ $(document).ready(function () {
     $('#edit_chart_of_accounts_modal').on('show.bs.modal', function(e) {
         var $modal = $(this);
         let chart_of_accounts_id = e.relatedTarget.id;
+        const edit_url = '{{ URL::to('/chart_of_accounts_expense/') }}'+ '/' + chart_of_accounts_id + '/edit';
         $.ajax({
             cache: false,
             type: 'GET',
-            url: '/chart_of_accounts_expense/' + chart_of_accounts_id + '/edit',
+            url: edit_url ,
             data: {
                 chart_of_accounts_id
             },
@@ -107,7 +108,7 @@ $(document).ready(function () {
         $.ajax({
             cache: false,
             type: 'POST',
-            url: '/chart_of_accounts_update_expense/',
+            url: "{{ URL::to('/chart_of_accounts_update_expense') }}",
             data: form_data,
             success: function(data) {
                 // console.log("Update Successfully");
@@ -283,7 +284,7 @@ $(document).ready(function () {
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Edit Chart of Accounts</h4>
+                    <h4 class="modal-title">Edit Expense</h4>
                 </div>
                 {!! Form::open(array('url' => '','method' => 'post', 'id' => 'edit_chart_of_accounts_form')) !!}
                 <div class="modal-body">
