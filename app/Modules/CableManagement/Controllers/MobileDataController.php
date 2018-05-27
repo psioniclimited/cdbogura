@@ -3,6 +3,9 @@
 namespace App\Modules\CableManagement\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Accounting\Models\ChartOfAccount;
+use App\Modules\Accounting\Models\Journal;
+use App\Modules\Accounting\Models\Posting;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Modules\User\Models\User;
@@ -191,7 +194,7 @@ class MobileDataController extends Controller
         $customer = Customer::findOrFail($request->input('customers_id'));
 
         // Payment Success
-        if($request->input('due') == 0){
+        if($request->input('due') == 0) {
 
             $addCustomerDetails->customers_id = $request->input('customers_id');
             $addCustomerDetails->total = $request->input('total');
@@ -237,6 +240,19 @@ class MobileDataController extends Controller
             // End of SMS user
 
             if($saved){
+                $journal = new Journal();
+                $journal->transaction_date = Carbon::createFromFormat('Y-m-d', Carbon::now()->toDateString())->format('d/m/Y');
+                $journal->note = 'Customer(Name: ' .$customer->name.', Code: ' . $customer->customer_code . ') has paid total ' . $request->input('total') . ' Taka';
+                $journal->ref_number = $customer->customer_code;
+                $journal->save();
+
+                $cash = ChartOfAccount::where('name', 'Cash')->first();
+                $request = (object) ['amount' => $request->input('total'), 'expense_category' => $cash->id];
+                $debit = (new Posting)->debitExpense($request, $journal);
+
+                $sales = ChartOfAccount::where('name', 'Sales')->first();
+                $request = (object) ['amount' => $request->input('total'), 'paid_with' => $sales->id];
+                $credit = (new Posting)->creditPayable($request, $journal);
                 return response("success");   
             }
             else{
@@ -245,7 +261,7 @@ class MobileDataController extends Controller
 
         }
         // Payment Not Received
-        else if($request->input('due') == 1){
+        else if($request->input('due') == 1) {
 
             $addCustomerDetails->customers_id = $request->input('customers_id');
             $addCustomerDetails->total = 0;
@@ -262,7 +278,7 @@ class MobileDataController extends Controller
             $saved = $addCustomerDetails->save();
 
             if($saved){
-                return response("success");   
+                return response("success");
             }
             else{
                 return  response("failed");
