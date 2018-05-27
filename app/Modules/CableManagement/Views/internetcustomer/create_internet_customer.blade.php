@@ -470,7 +470,7 @@ $(document).ready(function() {
 				</div>
 				<div class="form-group">
 					<label>Customer Password*</label>
-					<input type="text" class="form-control" name="customer_password" id="customer_password" placeholder="Enter customer password*" tabindex=7>
+					<input type="text" class="form-control" name="customer_password" id="customer_password" placeholder="Enter customer password*" tabindex=8>
 				</div>
 			</div>
 			<!-- /.col -->
@@ -479,7 +479,7 @@ $(document).ready(function() {
 				<div class="form-group">
 	                <label>Territory*</label>
 	                <div class="input-group">
-		                <select name="territory_id" id="territory_id" class="form-control" tabindex=8>
+		                <select name="territory_id" id="territory_id" class="form-control" tabindex=9>
 			                @foreach($territory as $terr)
 				                <option value="{{$terr->id}}">{{$terr->name}}</option>
 			                @endforeach
@@ -492,7 +492,7 @@ $(document).ready(function() {
 	            <div class="form-group @if ($errors->has('sectors_id')) has-error @endif">
 					<label>Sector/Moholla/Village*</label>
 					<div class="input-group @if ($errors->has('sectors_id')) has-error @endif">
-						<select name="sectors_id" class="form-control select2" id="sectors_id" tabindex=9>
+						<select name="sectors_id" class="form-control select2" id="sectors_id" tabindex=10>
 
 	            		</select>
 	            		<span class="input-group-btn">
@@ -504,7 +504,7 @@ $(document).ready(function() {
 	            <div class="form-group @if ($errors->has('roads_id')) has-error @endif">
 					<label>Road/Residential area*</label>
 					<div class="input-group">
-						<select name ="roads_id" class="form-control select2" id="roads_id" tabindex=10>
+						<select name ="roads_id" class="form-control select2" id="roads_id" tabindex=11>
 
 	            		</select>
 	            		<span class="input-group-btn">
@@ -516,7 +516,7 @@ $(document).ready(function() {
 				<div class="form-group @if ($errors->has('houses_id')) has-error @endif">
 					<label>House*</label>
 					<div class="input-group">
-						<select name ="houses_id" class="form-control select2" id="houses_id" tabindex=11>
+						<select name ="houses_id" class="form-control select2" id="houses_id" tabindex=12>
 		                  
 	            		</select>
 	            		<span class="input-group-btn">
@@ -527,7 +527,7 @@ $(document).ready(function() {
 				</div>
 				<div class="form-group">
 	                <label>Flat</label>
-	                <input type="text" class="form-control" name="flat" id="flat" placeholder="Enter flat" tabindex=12>
+	                <input type="text" class="form-control" name="flat" id="flat" placeholder="Enter flat" tabindex=13>
 				</div>
 				<div class="form-group @if ($errors->has('last_paid')) has-error @endif">
 	                <label>Due On*</label>
@@ -535,7 +535,7 @@ $(document).ready(function() {
 	                  <div class="input-group-addon">
 	                    <i class="fa fa-calendar"></i>
 	                  </div>
-	                  <input type="text" class="form-control pull-right" id="last_paid" name="last_paid" tabindex=13 value="{{old('last_paid')}}">
+	                  <input type="text" class="form-control pull-right" id="last_paid" name="last_paid" tabindex=14 value="{{old('last_paid')}}">
 	                </div>
 					@if ($errors->has('last_paid')) <p class="help-block">{{ $errors->first('last_paid') }}</p> @endif
               	</div>
@@ -545,19 +545,19 @@ $(document).ready(function() {
 	                  <div class="input-group-addon">
 	                    <i class="fa fa-calendar"></i>
 	                  </div>
-	                  <input type="text" class="form-control pull-right" id="connection_start_date" name="connection_start_date" tabindex=14>
+	                  <input type="text" class="form-control pull-right" id="connection_start_date" name="connection_start_date" tabindex=15>
 	                </div>
 				</div>
 				<div class="form-group">
 					<label for="pic" >Upload NID Photo</label>
-					<input type="file" name="pic" id="pic">
+					<input type="file" name="pic" id="pic" tabindex=16>
 				</div>
 			</div>
 			<!-- /.col -->
 		</div>
 		<!-- /.box-body -->
 		<div class="box-footer">
-	       	<button type="submit" class="btn btn-primary pull-right" tabindex=15>Submit</button>
+	       	<button type="submit" class="btn btn-primary pull-right" tabindex=17>Submit</button>
       	</div>
 		<!-- /.box-footer -->
 		{!! Form::close() !!}

@@ -2,6 +2,9 @@
 
 namespace App\Modules\CableManagement\Controllers;
 
+use App\Modules\Accounting\Models\ChartOfAccount;
+use App\Modules\Accounting\Models\Journal;
+use App\Modules\Accounting\Models\Posting;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Modules\CableManagement\Datatables\InternetBillCollectionDatatable;
@@ -36,7 +39,7 @@ class InternetBillCollectionController extends Controller {
      * @return [type]           [description]
      */
     public function refundInternetBillProcess(Request $request){
-        $refund_bill = CustomerDetails::find($request->input('bill_id'));
+        $refund_bill = CustomerDetails::with('customers')->find($request->input('bill_id'));
 
         $last_paid_date_carbon = new \Carbon\Carbon($refund_bill->last_paid_date);
         // Subtact that number of months from the last_paid_date_carbon 
@@ -48,6 +51,21 @@ class InternetBillCollectionController extends Controller {
         
         // Delete respective customer billing details
         $refund_bill->delete();
+
+
+        $journal = new Journal();
+        $journal->transaction_date = Carbon::createFromFormat('Y-m-d', Carbon::now()->toDateString())->format('d/m/Y');
+        $journal->note = 'Customer(Name: ' .$refund_bill->customers->name.', Code: ' . $refund_bill->customers->customer_code . ') has got refund total ' . $refund_bill->total . ' Taka';
+        $journal->ref_number = $refund_bill->customers->customer_code;
+        $journal->save();
+
+        $cash = ChartOfAccount::where('name', 'Cash')->first();
+        $request = (object) ['amount' => $refund_bill->total, 'paid_with' => $cash->id];
+        $credit = (new Posting)->creditPayable($request, $journal);
+
+        $sales = ChartOfAccount::where('name', 'Sales')->first();
+        $request = (object) ['amount' => $refund_bill->total, 'expense_category' => $sales->id];
+        $debit = (new Posting)->debitExpense($request, $journal);
 
         return "success";
     }
@@ -103,7 +121,7 @@ class InternetBillCollectionController extends Controller {
     }
 
     public function discountInternetBillProcess(Request $request){
-        $add_discount = CustomerDetails::find($request->input('discount_bill_id'));
+        $add_discount = CustomerDetails::with('customers')->find($request->input('discount_bill_id'));
         $form_data = $request->input('form_data');
         $discount_amount = $form_data[1]['value'];
         // $new_amount = $add_discount->total - $discount_amount;
@@ -114,6 +132,20 @@ class InternetBillCollectionController extends Controller {
             // Update total field in customer details table
             $update_customer_details = CustomerDetails::where('id', $add_discount->id)
             ->update(['discount' => $discount_amount]);
+
+            $journal = new Journal();
+            $journal->transaction_date = Carbon::createFromFormat('Y-m-d', Carbon::now()->toDateString())->format('d/m/Y');
+            $journal->note = 'Customer(Name: ' .$add_discount->customers->name.', Code: ' . $add_discount->customers->customer_code . ') has got discount total ' . $discount_amount . ' Taka';
+            $journal->ref_number = $add_discount->customers->customer_code;
+            $journal->save();
+
+            $cash = ChartOfAccount::where('name', 'Cash')->first();
+            $request = (object) ['amount' => $discount_amount, 'paid_with' => $cash->id];
+            $credit = (new Posting)->creditPayable($request, $journal);
+
+            $sales = ChartOfAccount::where('name', 'Sales')->first();
+            $request = (object) ['amount' => $discount_amount, 'expense_category' => $sales->id];
+            $debit = (new Posting)->debitExpense($request, $journal);
             
             return "success";
         }

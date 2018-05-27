@@ -539,7 +539,7 @@ $(document).ready(function () {
                 </div>
                 <div class="form-group">
                     <label>Customer Password*</label>
-                    <input type="text" class="form-control" name="customer_password" id="customer_password" placeholder="Enter customer password*" tabindex=7 value="{{$customer->customer_password}}">
+                    <input type="text" class="form-control" name="customer_password" id="customer_password" placeholder="Enter customer password*" tabindex=8 value="{{$customer->customer_password}}">
                 </div>
             </div>
             <!-- /.col -->
@@ -548,7 +548,7 @@ $(document).ready(function () {
                 <div class="form-group">
                     <label>Territory*</label>
                     <div class="input-group">
-                        <select class="form-control" name="territory_id" id="territory_id" tabindex=8>
+                        <select class="form-control" name="territory_id" id="territory_id" tabindex=9>
                             @foreach($territory as $terr)
                                 <option value="{{$terr->id}}"@if($terr->id == $customer->territory_id) selected @endif>{{$terr->name}}</option>
                             @endforeach
@@ -561,7 +561,7 @@ $(document).ready(function () {
                 <div class="form-group @if ($errors->has('sectors_id')) has-error @endif">
                     <label>Sector/Moholla/Village*</label>
                     <div class="input-group">
-                        <select class="form-control select2" name="sectors_id" id="sectors_id" tabindex=9>
+                        <select class="form-control select2" name="sectors_id" id="sectors_id" tabindex=10>
                             
                         </select>
                         <span class="input-group-btn">
@@ -573,7 +573,7 @@ $(document).ready(function () {
                 <div class="form-group @if ($errors->has('roads_id')) has-error @endif">
                     <label>Road/Residential area*</label>
                     <div class="input-group">
-                        <select class="form-control select2" name="roads_id" id="roads_id" tabindex=10>
+                        <select class="form-control select2" name="roads_id" id="roads_id" tabindex=11>
                             
                         </select>
                         <span class="input-group-btn">
@@ -585,7 +585,7 @@ $(document).ready(function () {
                 <div class="form-group @if ($errors->has('houses_id')) has-error @endif">
                     <label>House*</label>
                     <div class="input-group">
-                        <select class="form-control select2" name="houses_id" id="houses_id" tabindex=11>
+                        <select class="form-control select2" name="houses_id" id="houses_id" tabindex=12>
                             
                         </select>
                         <span class="input-group-btn">
@@ -596,7 +596,7 @@ $(document).ready(function () {
                 </div>
                 <div class="form-group">
                     <label>Flat</label>
-                    <input type="text" class="form-control" name="flat" id="flat" placeholder="Enter flat" value="{{$customer->flat}}" tabindex=12>
+                    <input type="text" class="form-control" name="flat" id="flat" placeholder="Enter flat" value="{{$customer->flat}}" tabindex=13>
                 </div>
                 <div class="form-group @if ($errors->has('last_paid')) has-error @endif">
                     <label>Last Paid Date*</label>
@@ -604,7 +604,7 @@ $(document).ready(function () {
                       <div class="input-group-addon">
                         <i class="fa fa-calendar"></i>
                       </div>
-                      <input type="text" class="form-control pull-right" id="last_paid" name="last_paid" value="{{$last_paid}}" tabindex=13>
+                      <input type="text" class="form-control pull-right" id="last_paid" name="last_paid" value="{{$last_paid}}" tabindex=14>
                     </div>
                     @if ($errors->has('last_paid')) <p class="help-block">{{ $errors->first('last_paid') }}</p> @endif
                 </div>
@@ -614,19 +614,19 @@ $(document).ready(function () {
                       <div class="input-group-addon">
                         <i class="fa fa-calendar"></i>
                       </div>
-                      <input type="text" class="form-control pull-right" id="connection_start_date" name="connection_start_date" value="{{$connection_start_date}}" tabindex=14>
+                      <input type="text" class="form-control pull-right" id="connection_start_date" name="connection_start_date" value="{{$connection_start_date}}" tabindex=15>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="pic" >Upload NID Photo</label>
-                    <input type="file" name="pic" id="pic">
+                    <input type="file" name="pic" id="pic" tabindex=16>
                 </div>
             </div>
             <input type="hidden" id="customer_id" name="customer_id" value="{{$customer->customers_id}}">
         </div>
         <!-- /.box-body -->
         <div class="box-footer">
-            <button type="submit" class="btn btn-primary pull-right" tabindex=15>Submit</button>
+            <button type="submit" class="btn btn-primary pull-right" tabindex=17>Submit</button>
         </div>
         <!-- /.box-footer -->
         {!! Form::close() !!}

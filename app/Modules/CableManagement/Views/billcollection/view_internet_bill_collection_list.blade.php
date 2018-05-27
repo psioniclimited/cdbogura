@@ -236,7 +236,7 @@
                 url: '{{URL::to('/')}}/auto/sector',
                 selector_id: sector,
                 value_id: territory
-            }
+            };
             
             // Pass it as a parameter to init_select
             // Initialize select2 on sector

@@ -26,7 +26,7 @@ $(document).ready(function () {
         position: 'right'  // display the tips to the right of the element
     });
 
-    // initialize validate plugin on the form
+    //initialize validate plugin on the form
     $('#collect_bill_form').validate({
         errorPlacement: function (error, element) {
 
@@ -44,11 +44,11 @@ $(document).ready(function () {
             $(element).tooltipster('hide');
         },
         rules: {
-            customer_code: {required: true},
+            // customer_code: {required: true},
             last_paid_date_num: {required: true}
         },
         messages: {
-            customer_code: {required: "Please select a customer code"},
+            // customer_code: {required: "Please select a customer code"},
             last_paid_date_num: {required: "Please enter number of months"}
         }
     });
@@ -82,11 +82,12 @@ $(document).ready(function () {
     });
 
     customer_code.change(function(){
-        $(this).valid(); // trigger validation on this element
+        // $(this).valid(); // trigger validation on this element
     });
 
     //on customer_code change show customer details
     customer_code.change(function(){
+        select_customer_name.val(null).trigger('change.select2');
         // clear values
         $('p').empty();
         $('input').val('');
@@ -108,7 +109,7 @@ $(document).ready(function () {
     });
 
 
-// Customer codes
+    // Customer codes
     var select_customer_name = $('#select_customer_name');
     select_customer_name.select2({
         placeholder: "Select a customer name",
@@ -138,6 +139,7 @@ $(document).ready(function () {
 
     //on customer_code change show customer details
     select_customer_name.change(function(){
+        customer_code.val(null).trigger('change.select2');
         // clear values
         $('p').empty();
         $('input').val('');
@@ -206,7 +208,7 @@ $(document).ready(function () {
                                 </div>
                                 <div class="form-group">
                                     <label>Customer Name*</label>
-                                    <select class="form-control select2" name="name" id="select_customer_name"></select>
+                                    <select class="form-control select2" name="customer_id" id="select_customer_name"></select>
                                 </div>
                                 <div class="form-group">
                                     <label>Number of months*</label>
@@ -219,7 +221,7 @@ $(document).ready(function () {
                         </div>
                         <!-- /.box-body -->
                         <div class="box-footer">
-                            <center><button type="submit" class="btn btn-primary pull-right">Submit</button></center>
+                            <button type="submit" class="btn btn-primary pull-right">Submit</button>
                         </div>
                         <!-- /.box-footer -->
                         {!! Form::close() !!}

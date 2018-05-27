@@ -2,6 +2,9 @@
 
 namespace App\Modules\CableManagement\Controllers;
 
+use App\Modules\Accounting\Models\ChartOfAccount;
+use App\Modules\Accounting\Models\Journal;
+use App\Modules\Accounting\Models\Posting;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Modules\CableManagement\Datatables\BillCollectionDatatable;
@@ -36,18 +39,31 @@ class BillCollectionController extends Controller {
      * @return [type]           [description]
      */
     public function refundBillProcess(Request $request){
-        $refund_bill = CustomerDetails::find($request->input('bill_id'));
-
+        $refund_bill = CustomerDetails::with('customers')->find($request->input('bill_id'));
         $last_paid_date_carbon = new \Carbon\Carbon($refund_bill->last_paid_date);
         // Subtact that number of months from the last_paid_date_carbon 
         $last_paid_date = $last_paid_date_carbon->subMonth($refund_bill->last_paid_date_num);
         
         // Update last paid date in customer table
         $update_customer = Customer::where('customers_id', $refund_bill->customers_id)
-        ->update(['last_paid' => $last_paid_date->toDateString()]);
+                            ->update(['last_paid' => $last_paid_date->toDateString()]);
         
         // Delete respective customer billing details
         $refund_bill->delete();
+
+        $journal = new Journal();
+        $journal->transaction_date = Carbon::createFromFormat('Y-m-d', Carbon::now()->toDateString())->format('d/m/Y');
+        $journal->note = 'Customer(Name: ' .$refund_bill->customers->name.', Code: ' . $refund_bill->customers->customer_code . ') has paid total ' . $refund_bill->total . ' Taka';
+        $journal->ref_number = $refund_bill->customers->customer_code;
+        $journal->save();
+
+        $cash = ChartOfAccount::where('name', 'Cash')->first();
+        $request = (object) ['amount' => $refund_bill->total, 'expense_category' => $cash->id];
+        $credit = (new Posting)->creditPayable($request, $journal);
+
+        $sales = ChartOfAccount::where('name', 'Sales')->first();
+        $request = (object) ['amount' => $refund_bill->total, 'paid_with' => $sales->id];
+        $debit = (new Posting)->debitExpense($request, $journal);
 
         return "success";
     }
@@ -57,8 +73,7 @@ class BillCollectionController extends Controller {
      * @param  RefundHistoryDatatable $dataTable [description]
      * @return [view]                            [description]
      */
-    public function viewRefundHistory(RefundHistoryDatatable $dataTable){ 
-
+    public function viewRefundHistory(RefundHistoryDatatable $dataTable){
         return $dataTable->render('CableManagement::billcollection.view_refund_history');
     }
 
@@ -67,6 +82,8 @@ class BillCollectionController extends Controller {
      * @return [view] [description]
      */
     public function collectBill(){
+//        $ss = CustomerDetails::with('customers')->find(1);
+//        return $ss->customers->name;
         return view('CableManagement::billcollection.collect_bill');
     }
 
@@ -76,8 +93,12 @@ class BillCollectionController extends Controller {
      * @return [type]           [description]
      */
     public function collectBillProcess(Request $request) {
-        $customer = Customer::find($request->input('customer_code'));
-        
+        if($request->input('customer_code')) {
+            $customer = Customer::find($request->input('customer_code'));
+        } elseif ($request->input('customer_id')) {
+            $customer = Customer::find($request->input('customer_id'));
+        }
+
         $form_data = $request->all();
         $form_data['customers_id'] = $customer->customers_id; 
         $form_data['due'] = 0; 
@@ -92,14 +113,28 @@ class BillCollectionController extends Controller {
         $form_data['total'] = ($customer->monthly_bill)*$last_paid_date_num;
         $form_data['users_id'] = Auth::user()->id;
         $form_data['timestamp'] = \Carbon\Carbon::now()->format('d-m-Y H:i:s');
-        
         CustomerDetails::create($form_data);
          
         // Update last_paid in customer table
         $last_paid_carbon = (new \Carbon\Carbon($customer->last_paid))->addMonth($last_paid_date_num)->format('d/m/Y');
         $customer->last_paid = $last_paid_carbon;
         $customer->save();
-        return redirect('billcollectionlist');
+
+        $journal = new Journal();
+        $journal->transaction_date = Carbon::createFromFormat('Y-m-d', Carbon::now()->toDateString())->format('d/m/Y');
+        $journal->note = 'Customer(Name: ' .$customer->name.', Code: ' . $customer->customer_code . ') has paid total ' . $form_data['total'] . ' Taka';
+        $journal->ref_number = $customer->customer_code;
+        $journal->save();
+
+        $cash = ChartOfAccount::where('name', 'Cash')->first();
+        $request = (object) ['amount' => $form_data['total'], 'expense_category' => $cash->id];
+        $debit = (new Posting)->debitExpense($request, $journal);
+
+        $sales = ChartOfAccount::where('name', 'Sales')->first();
+        $request = (object) ['amount' => $form_data['total'], 'paid_with' => $sales->id];
+        $credit = (new Posting)->creditPayable($request, $journal);
+
+        return redirect('internetbillcollectionlist');
     }
 
     public function discountBillProcess(Request $request){
