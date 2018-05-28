@@ -33,6 +33,9 @@ Route::group(['middleware' => ['web']], function () {
     Route::post('chart_of_account/{chart_of_account}/delete', 'App\Modules\Accounting\Controllers\ChartOfAccountsController@deleteChartOfAccountProcess');
     Route::get('chart_of_accounts/{chart_of_accounts_id}/edit', 'App\Modules\Accounting\Controllers\ChartOfAccountsController@chartOfAccountsEdit');
     Route::post('chart_of_accounts_update/{chart_of_accounts_id}', 'App\Modules\Accounting\Controllers\ChartOfAccountsController@chartOfAccountsUpdate');
+    Route::get('money_transfer', 'App\Modules\Accounting\Controllers\ChartOfAccountsController@moneyTransfer');
+    Route::post('money_transfer_process', 'App\Modules\Accounting\Controllers\ChartOfAccountsController@moneyTransferProcess');
+    Route::get('get_coa_for_money_transfer', 'App\Modules\Accounting\Controllers\ChartOfAccountsController@getCoaForMoneyTransfer');
 
 
 });

@@ -18,7 +18,6 @@ class ChartOfAccountsController extends Controller {
 
     public function createChartOfAccount() {
         $chartOfAccountsList = ChartOfAccount::with('chartOfAccounts')->where('parent_accounts_id', null)->get();
-//        return $chartOfAccountsList;
         return view('Accounting::coa.create_chart_of_accounts')
                 ->with('chartOfAccountsList', $chartOfAccountsList);;
     }
@@ -33,6 +32,7 @@ class ChartOfAccountsController extends Controller {
                                 ->update([
                                     'name' => $request->name,
                                     'description' => $request->description,
+                                    'starting_balance' => $request->starting_balance,
                                     'is_payment_account' => 1
                                 ]);
         }
@@ -41,6 +41,7 @@ class ChartOfAccountsController extends Controller {
                                 ->update([
                                     'name' => $request->name,
                                     'description' => $request->description,
+                                    'starting_balance' => $request->starting_balance,
                                     'is_payment_account' => 0
                                 ]);
         }
@@ -63,6 +64,7 @@ class ChartOfAccountsController extends Controller {
         $new_chart_of_account->code = $code;
         $new_chart_of_account->name = $request->name;
         $new_chart_of_account->description = $request->description;
+        $new_chart_of_account->starting_balance = $request->starting_balance;
         if($request->is_payment_account) {
             $new_chart_of_account->is_payment_account = 1;
         }
@@ -77,7 +79,33 @@ class ChartOfAccountsController extends Controller {
     }
 
 
+    public function moneyTransfer() {
+        return view('Accounting::coa.money_transfer');
+    }
 
+    public function moneyTransferProcess(Request $request) {
+        $journal = new Journal();
+        $journal->transaction_date = Carbon::createFromFormat('Y-m-d', Carbon::now()->toDateString())->format('d/m/Y');
+        $journal->note = $request->note;
+        $journal->ref_number = $request->ref_number;
+        $journal->save();
+
+        $credit = (object) ['amount' => $request->amount, 'paid_with' => $request->from_chart_of_accounts];
+        (new Posting)->creditPayable($credit, $journal);
+
+        $debit = (object) ['amount' => $request->amount, 'expense_category' => $request->to_chart_of_accounts];
+        (new Posting)->debitExpense($debit, $journal);
+
+        return back();
+    }
+
+    public function getCoaForMoneyTransfer(Request $request) {
+        $search_term = $request->input('term');
+        $getChartOfAccount = ChartOfAccount::where('name', "LIKE", "%{$search_term}%")
+            ->where('is_payment_account', 1)
+            ->get(['id', 'name as text']);
+        return response()->json($getChartOfAccount);
+    }
 
 
 }

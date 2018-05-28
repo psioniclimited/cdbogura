@@ -38,6 +38,7 @@ class VerifyCsrfToken extends BaseVerifier
         'edit_internet_customer_process',
         'create_partner_process',
         'update_partner_process',
+        'money_transfer_process',
         'partner/*/delete',
     ];
 }

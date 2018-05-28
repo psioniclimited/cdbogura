@@ -84,7 +84,7 @@
             <li {!! Request::is('chart_of_accounts_expense') ? ' class="active"' : null !!}><a href="{{url('chart_of_accounts_expense')}}"><i class="fa fa-circle-o"></i> Expense Category</a></li>
         </ul>
     </li>
-    <li {!! Request::is('create_chart_of_account') ? ' class="treeview active"' : ' class="treeview"' !!}>
+    <li {!! Request::is('create_chart_of_account') || Request::is('money_transfer') ? ' class="treeview active"' : ' class="treeview"' !!}>
         <a href="#">
             <i class="fa fa-files-o"></i>
             <span>Chart of Accounts</span>
@@ -94,6 +94,7 @@
         </a>
         <ul class="treeview-menu">
             <li {!! Request::is('create_chart_of_account') ? ' class="active"' : null !!}><a href="{{url('create_chart_of_account')}}"><i class="fa fa-circle-o"></i> New Chart Of Account</a></li>
+            <li {!! Request::is('money_transfer') ? ' class="active"' : null !!}><a href="{{url('money_transfer')}}"><i class="fa fa-circle-o"></i> Money Transfer</a></li>
         </ul>
     </li>
     <li {!! Request::is('create_complain') || Request::is('complain_list') || Request::is('*edit_complain/*') ? ' class="treeview active"' : ' class="treeview"' !!}>

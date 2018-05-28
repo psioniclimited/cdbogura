@@ -58,6 +58,7 @@
                     success: function(data) {
                         $('input#edit_name').val(data.name);
                         $('input#edit_description').val(data.description);
+                        $('input#edit_starting_balance').val(data.starting_balance);
                         if(data.is_payment_account === 1) {
                             $('#edit_is_payment_account').parent().attr({
                                 'class': 'icheckbox_flat-green checked',
@@ -89,6 +90,7 @@
                     }
                 });
             });
+
             $('#cancel_edit_chart_of_accounts_modal').click(function(e){
                 chart_of_accounts_id = null;
             });
@@ -154,6 +156,7 @@
                 {!! Form::open(array('url' => 'create_chart_of_account_process', 'method' => 'post', 'id' => 'add_chart_of_accounts_form')) !!}
                     <input type="text" placeholder="Enter chart of account" name="name">
                     <input type="text" placeholder="Enter description" name="description">
+                    <input type="text" placeholder="Enter starting balance" name="starting_balance">
                     <label>
                         <input type="checkbox" class="flat-red" name="is_payment_account" value="1">
                         Is payment account
@@ -195,13 +198,17 @@
                 </div>
                 {!! Form::open(array('url' => '','method' => 'post', 'id' => 'edit_chart_of_accounts_form')) !!}
                 <div class="modal-body">
-                    <div class="form-group edit_name_modal">
+                    <div class="form-group">
                         <label>Name*</label>
                         <input type="text" class="form-control" id="edit_name" name="name" >
                     </div>
-                    <div class="form-group edit_description_modal">
+                    <div class="form-group">
                         <label>Description*</label>
                         <input type="text" class="form-control" id="edit_description" name="description">
+                    </div>
+                    <div class="form-group">
+                        <label>Starting Balance*</label>
+                        <input type="text" class="form-control" id="edit_starting_balance" name="starting_balance">
                     </div>
                     <label>
                         <input type="checkbox" class="flat-red" id="edit_is_payment_account" name="is_payment_account">
